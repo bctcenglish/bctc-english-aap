@@ -33,6 +33,13 @@
     .call-pulse {
       animation: pulse-ring 2s infinite ease-in-out;
     }
+    @keyframes fadeOut {
+      from { opacity: 1; visibility: visible; }
+      to { opacity: 0; visibility: hidden; }
+    }
+    .splash-hide {
+      animation: fadeOut 0.8s ease-in-out forwards;
+    }
 
     /* PRINT STYLES FOR A4 CERTIFICATE */
     @media print {
@@ -68,6 +75,26 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
 
+  <!-- SPLASH SCREEN (Shows photo for 3 seconds on startup) -->
+  <div id="splashScreen" class="fixed inset-0 z-50 bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-950 text-white flex flex-col items-center justify-center p-6 text-center">
+    <div class="relative mb-6">
+      <div class="w-36 h-36 rounded-full p-1 bg-gradient-to-tr from-amber-400 to-indigo-500 shadow-2xl">
+        <img src="1000858384.png" alt="Abhijit Chakraborty" class="w-full h-full rounded-full object-cover border-4 border-indigo-950" />
+      </div>
+    </div>
+    <h1 class="font-extrabold text-2xl sm:text-3xl tracking-tight mb-1 text-white">BCTC ENGLISH</h1>
+    <p class="text-xs sm:text-sm text-amber-300 font-semibold mb-4">Brajodham Computer Tutorial Center • South Kolkata</p>
+    <div class="max-w-md bg-white/10 backdrop-blur border border-white/20 p-4 rounded-2xl mb-8">
+      <p class="text-xs text-indigo-200 leading-relaxed">
+        "Welcome to your Spoken English & Grammar Learning Platform. Designed specially for Bengali-medium students."
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+      <span class="text-xs font-bold text-indigo-300 tracking-wider uppercase">Loading App...</span>
+    </div>
+  </div>
+
   <!-- TOP HEADER -->
   <header class="no-print bg-gradient-to-r from-indigo-950 via-indigo-900 to-blue-900 text-white shadow-lg sticky top-0 z-30">
     <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
@@ -101,25 +128,28 @@
 
     <!-- NAVIGATION TABS -->
     <div class="max-w-5xl mx-auto px-4 flex overflow-x-auto no-scrollbar border-t border-indigo-800/80">
-      <button onclick="switchTab('live_call')" id="tab-live_call" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-bold border-b-2 border-amber-400 text-amber-300 bg-white/5 whitespace-nowrap">
-        📞 Live AI Call <span class="bg-rose-500 text-white text-[9px] px-1.5 py-0.5 rounded font-extrabold">LIVE</span>
+      <button onclick="switchTab('live_call')" id="tab-live_call" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-bold border-b-2 border-amber-400 text-amber-300 bg-white/5 whitespace-nowrap">
+        📞 Live Call <span class="bg-rose-500 text-white text-[9px] px-1.5 py-0.5 rounded font-extrabold">LIVE</span>
       </button>
-      <button onclick="switchTab('ai_chat')" id="tab-ai_chat" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+      <button onclick="switchTab('ai_chat')" id="tab-ai_chat" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
         🤖 AI Tutor
       </button>
-      <button onclick="switchTab('tracker')" id="tab-tracker" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+      <button onclick="switchTab('grammar_lessons')" id="tab-grammar_lessons" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        📚 Spoken Grammar <span class="bg-amber-400 text-indigo-950 text-[9px] px-1 py-0.5 rounded font-extrabold">NEW</span>
+      </button>
+      <button onclick="switchTab('tracker')" id="tab-tracker" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
         📅 ৩০ দিনের রুটিন
       </button>
-      <button onclick="switchTab('certificate')" id="tab-certificate" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
-        🎓 Certificate <span id="certTabBadge" class="bg-amber-400 text-indigo-950 text-[9px] px-1.5 py-0.5 rounded font-extrabold">NEW</span>
+      <button onclick="switchTab('certificate')" id="tab-certificate" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        🎓 Certificate
       </button>
-      <button onclick="switchTab('bridge')" id="tab-bridge" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+      <button onclick="switchTab('bridge')" id="tab-bridge" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
         🧩 বাক্য গঠন
       </button>
-      <button onclick="switchTab('pronunciation')" id="tab-pronunciation" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+      <button onclick="switchTab('pronunciation')" id="tab-pronunciation" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
         🎙️ উচ্চারণ ল্যাব
       </button>
-      <button onclick="switchTab('banglish')" id="tab-banglish" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+      <button onclick="switchTab('banglish')" id="tab-banglish" class="tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
         ✨ ভুল সংশোধন
       </button>
     </div>
@@ -134,7 +164,7 @@
         <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
           <div>
             <h2 class="font-extrabold text-slate-800 text-base">📞 Hands-Free AI Voice Call</h2>
-            <p class="text-xs text-slate-500 mt-1">প্র্যাকটিসের জন্য একটি পরিস্থিতি বেছে নিন:</p>
+            <p class="text-xs text-slate-500 mt-1">প্র্যাকটিসের জন্য পরিস্থিতি বেছে নিন:</p>
           </div>
           <div id="callScenarioList" class="space-y-2.5"></div>
           <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 leading-relaxed bilingual-hint">
@@ -210,7 +240,6 @@
           <span class="text-[11px] font-bold text-slate-400 shrink-0">উদাহরণ:</span>
           <button onclick="sendChatMessage('Myself Rahul from Kolkata.')" class="text-xs bg-white text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full whitespace-nowrap">"Myself Rahul"</button>
           <button onclick="sendChatMessage('Today I went to college and gave exam.')" class="text-xs bg-white text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full whitespace-nowrap">"gave exam"</button>
-          <button onclick="sendChatMessage('আমার ট্রেনটা ১০ মিনিট লেট আছে।')" class="text-xs bg-white text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full whitespace-nowrap">"ট্রেন লেট আছে"</button>
         </div>
 
         <div class="p-3.5 border-t border-slate-200 flex items-center gap-2">
@@ -222,7 +251,53 @@
       </div>
     </section>
 
-    <!-- 3. 30-DAY TRACKER -->
+    <!-- 3. EXPANDED SPOKEN GRAMMAR LESSONS -->
+    <section id="section-grammar_lessons" class="tab-section hidden no-print">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Grammar Topics Sidebar -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+          <h2 class="font-extrabold text-slate-800 text-base mb-1">📚 Spoken Grammar Masterclass</h2>
+          <p class="text-xs text-slate-500 mb-4">স্পোকেন ইংলিশের জন্য অতি-প্রয়োজনীয় ব্যাকরণ পাঠ:</p>
+          <div id="grammarTopicList" class="space-y-2 max-h-[420px] overflow-y-auto no-scrollbar"></div>
+        </div>
+
+        <!-- Grammar Lesson Detail Card -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span id="gramCategoryBadge" class="text-xs font-extrabold uppercase bg-purple-100 text-purple-800 px-3 py-1 rounded-full">Grammar Rule</span>
+              <button onclick="speakSelectedText(activeGrammarRule.exampleEn)" class="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-bold text-xs flex items-center gap-1.5">
+                🔊 উদাহরণ শুনুন
+              </button>
+            </div>
+            
+            <h3 id="gramTitle" class="text-xl font-extrabold text-slate-800 mb-3"></h3>
+            <p id="gramExplanation" class="text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-5 leading-relaxed"></p>
+
+            <div class="space-y-3 mb-6">
+              <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200">
+                <span class="text-xs font-bold text-rose-700 block mb-1">❌ ভুল বাংলা মিডিয়াম অভ্যাস (Wrong/Literal):</span>
+                <p id="gramWrong" class="text-sm font-semibold text-rose-900"></p>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                <span class="text-xs font-bold text-emerald-700 block mb-1">✅ সঠিক Spoken Structure (Right):</span>
+                <p id="gramRight" class="text-sm font-bold text-emerald-950"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+            <span class="text-xs text-slate-400">প্রতিদিন নিয়মগুলো চর্চা করলে জড়তা কেটে যাবে।</span>
+            <button onclick="nextGrammarTopic()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs">
+              পরের নিয়ম ➔
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 30-DAY TRACKER -->
     <section id="section-tracker" class="tab-section hidden no-print">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
@@ -276,7 +351,7 @@
       </div>
     </section>
 
-    <!-- 4. CERTIFICATE GENERATOR -->
+    <!-- 5. CERTIFICATE GENERATOR -->
     <section id="section-certificate" class="tab-section hidden">
       <div class="no-print bg-white rounded-2xl p-5 shadow-sm border border-slate-200 mb-6">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-100">
@@ -379,7 +454,7 @@
       </div>
     </section>
 
-    <!-- 5. SENTENCE BRIDGE -->
+    <!-- 6. SENTENCE BRIDGE -->
     <section id="section-bridge" class="tab-section hidden no-print">
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-3xl mx-auto">
         <div class="flex items-center justify-between mb-3">
@@ -401,7 +476,7 @@
       </div>
     </section>
 
-    <!-- 6. PRONUNCIATION LAB -->
+    <!-- 7. PRONUNCIATION LAB -->
     <section id="section-pronunciation" class="tab-section hidden no-print">
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-3xl mx-auto">
         <span id="pronCategory" class="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1 rounded-full"></span>
@@ -417,7 +492,7 @@
       </div>
     </section>
 
-    <!-- 7. BANGLISH FIXER -->
+    <!-- 8. BANGLISH FIXER -->
     <section id="section-banglish" class="tab-section hidden no-print">
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-3xl mx-auto">
         <h2 class="text-lg font-extrabold text-slate-800 mb-1">✨ Banglish Fixer</h2>
@@ -486,10 +561,11 @@
       document.querySelectorAll('.tab-section').forEach(s => s.classList.add('hidden'));
       document.getElementById('section-' + tabId).classList.remove('hidden');
       document.querySelectorAll('.tab-btn').forEach(b => {
-        b.className = "tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap";
+        b.className = "tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap";
       });
-      document.getElementById('tab-' + tabId).className = "tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-bold border-b-2 border-amber-400 text-amber-300 bg-white/5 whitespace-nowrap";
+      document.getElementById('tab-' + tabId).className = "tab-btn flex items-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-bold border-b-2 border-amber-400 text-amber-300 bg-white/5 whitespace-nowrap";
       if (tabId === 'certificate') updateCertificatePreview();
+      if (tabId === 'grammar_lessons') renderGrammarLesson();
     }
 
     // --- 1. CALL SCENARIOS ---
@@ -571,12 +647,89 @@
 
     function clearChat() { chatHistory = [chatHistory[0]]; renderChat(); }
 
-    // --- 3. 30-DAY TRACKER ---
+    // --- 3. SPOKEN GRAMMAR MASTERCLASS ---
+    const GRAMMAR_TOPICS = [
+      {
+        title: "1. WH-Questions (প্রশ্ন করার মাস্টার ফর্মুলা)",
+        category: "Conversational Inquiry",
+        explanation: "কারো সম্পর্কে বিস্তারিত জানতে Who, What, Where, When, Why, How দিয়ে প্রশ্ন করতে হয়। গঠন: [WH word] + [Auxiliary Verb] + [Subject] + [Main Verb]?",
+        wrong: "Where you are going now?",
+        right: "Where are you going now?",
+        exampleEn: "What time do you usually wake up in the morning?"
+      },
+      {
+        title: "2. Conditional Clauses (শর্তমূলক বাক্য - If Clauses)",
+        category: "Conditionals",
+        explanation: "কোনো শর্ত সাপেক্ষে ফল প্রকাশ করতে Conditionals ব্যবহৃত হয়। যেমন Type 1 (যদি বৃষ্টি হয়, আমি যাবো): If it rains, I will go.",
+        wrong: "If you will come, I will help you.",
+        right: "If you come, I will help you.",
+        exampleEn: "If you practice English every day, you will speak fluently."
+      },
+      {
+        title: "3. Finite & Non-Finite Verbs (সমাপিকা ও অসমাপিকা ক্রিয়া)",
+        category: "Verb Mechanics",
+        explanation: "যে Verb Subject ও Tense অনুযায়ী পরিবর্তিত হয় তা Finite (যেমন: I want). আর যা পরিবর্তিত হয় না বা infinitive/gerund হয় তা Non-Finite (যেমন: to learn / learning).",
+        wrong: "I want learn English.",
+        right: "I want to learn English.",
+        exampleEn: "Learning spoken English is very important for career growth."
+      },
+      {
+        title: "4. Voice Change in Spoken English (Active vs Passive)",
+        category: "Voice Change",
+        explanation: "যখন কাজ কে করছে তা মুখ্য নয় বরং কাজটি কী বা কার ওপর হলো তা গুরুত্বপূর্ণ, তখন Passive Voice ব্যবহার করা হয় (যেমন: 'The bridge was built in 2020').",
+        wrong: "English spoken all over the world.",
+        right: "English is spoken all over the world.",
+        exampleEn: "My application has been submitted successfully."
+      },
+      {
+        title: "5. Question Tags (কথোপকথনে হ্যাঁ/না জানার শর্টকাট)",
+        category: "Question Tags",
+        explanation: "বাক্যের শেষে ছোট একটি প্রশ্ন জুড়ে সম্মতি নেওয়া (যেমন: 'তুমি আসছো, তাই না?'): You are coming, aren't you?",
+        wrong: "You know English, yes?",
+        right: "You know English, don't you?",
+        exampleEn: "It is a beautiful morning, isn't it?"
+      }
+    ];
+    let currentGrammarIndex = 0;
+    let activeGrammarRule = GRAMMAR_TOPICS[0];
+
+    function renderGrammarLesson() {
+      activeGrammarRule = GRAMMAR_TOPICS[currentGrammarIndex];
+      
+      const listEl = document.getElementById('grammarTopicList');
+      listEl.innerHTML = GRAMMAR_TOPICS.map((t, idx) => `
+        <button onclick="selectGrammarTopic(${idx})" class="w-full text-left p-3 rounded-xl border transition ${
+          currentGrammarIndex === idx
+            ? 'bg-indigo-50 border-indigo-600 ring-1 ring-indigo-500 font-bold text-indigo-950'
+            : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700'
+        }">
+          <div class="text-xs">${t.title}</div>
+        </button>
+      `).join('');
+
+      document.getElementById('gramCategoryBadge').innerText = activeGrammarRule.category;
+      document.getElementById('gramTitle').innerText = activeGrammarRule.title;
+      document.getElementById('gramExplanation').innerText = activeGrammarRule.explanation;
+      document.getElementById('gramWrong').innerText = `"${activeGrammarRule.wrong}"`;
+      document.getElementById('gramRight').innerText = `"${activeGrammarRule.right}"`;
+    }
+
+    function selectGrammarTopic(idx) {
+      currentGrammarIndex = idx;
+      renderGrammarLesson();
+    }
+
+    function nextGrammarTopic() {
+      currentGrammarIndex = (currentGrammarIndex + 1) % GRAMMAR_TOPICS.length;
+      renderGrammarLesson();
+    }
+
+    // --- 4. 30-DAY TRACKER ---
     const DAYS_DATA = Array.from({ length: 30 }, (_, i) => {
       const d = i + 1;
       const presets = {
         1: { title: "SOV থেকে SVO কাঠামো", rule: "বাংলায় ক্রিয়া শেষে থাকে (আমি ভাত খাই), কিন্তু ইংরেজিতে Subject-এর পরেই Verb বসে (I eat rice)।", bn: "আমি প্রতিদিন ইংরেজি চর্চা করি।", en: "I practice English every day." },
-        2: { title: "Am / Is / Are-এর ব্যবহার", rule: "বাংলায় 'আমি ছাত্র' বাক্যে কোনো ক্রিয়া থাকে না, কিন্তু ইংরেজিতে am/is/are বসাতে হয়।", bn: "আমি একজন ছাত্র।", en: "I am a student." }
+        2: { title: "WH-Questions অনুশীলন", rule: "What, Where, When দিয়ে প্রশ্ন করার সময় Subject-এর আগে সাহায্যকারী verb (do/does/did) বসান।", bn: "আপনি কোথায় থাকেন?", en: "Where do you live?" }
       };
       return presets[d] || {
         title: `Day ${d}: Spoken Fluency Mission`,
@@ -654,7 +807,6 @@
       const statusText = document.getElementById('certStatusText');
       if (completedDays.length >= 30) {
         statusText.innerText = '✅ ৩০/৩০ দিন সম্পন্ন!';
-        document.getElementById('certTabBadge').innerText = 'READY';
       } else {
         statusText.innerText = `প্রগ্রেস: ${completedDays.length}/30 দিন`;
       }
@@ -663,7 +815,7 @@
     // --- 5. SENTENCE BRIDGE ---
     const BRIDGE_DATA = [
       { bangla: "আমি ভাত খাই।", target: ["I", "eat", "rice"], bank: ["rice", "I", "eat"] },
-      { bangla: "সে ইংরেজি প্র্যাকটিস করে।", target: ["He", "practices", "English"], bank: ["English", "practices", "He"] }
+      { bangla: "তুমি কোথায় থাকো?", target: ["Where", "do", "you", "live"], bank: ["you", "live", "Where", "do"] }
     ];
     let bridgeIdx = 0, selBridge = [];
 
@@ -694,7 +846,7 @@
         speakSelectedText(b.target.join(' '));
       } else {
         fb.className = "mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold";
-        fb.innerText = "❌ ভুল ক্রম! প্রথমে Subject দিন।";
+        fb.innerText = "❌ ভুল ক্রম! পুনরায় চেষ্টা করুন।";
       }
     }
 
@@ -742,17 +894,27 @@
 
     function nextFix() { fixIdx = (fixIdx + 1) % FIX_DATA.length; renderFix(); }
 
-    // --- INITIALIZE ON LOAD ---
+    // --- INITIALIZE ON LOAD & HIDE SPLASH SCREEN ---
     window.onload = () => {
       document.getElementById('xpDisplay').innerText = xp + ' XP';
       document.getElementById('streakDisplay').innerText = "5 দিন";
       renderCall();
       renderChat();
+      renderGrammarLesson();
       renderTracker();
       updateCertificatePreview();
       renderBridge();
       renderPron();
       renderFix();
+
+      // Hide splash screen after 3 seconds
+      setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        if (splash) {
+          splash.classList.add('splash-hide');
+          setTimeout(() => splash.remove(), 800);
+        }
+      }, 3000);
     };
   </script>
 </body>
