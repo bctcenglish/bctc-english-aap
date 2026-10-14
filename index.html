@@ -1,0 +1,710 @@
+﻿<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BCTC ENGLISH - Spoken English App for Bengali Medium Students</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for Bangla, UI & Certificate Calligraphy -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Great+Vibes&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', 'Hind Siliguri', sans-serif;
+    }
+    .font-serif-cert {
+      font-family: 'Cinzel', serif;
+    }
+    .font-signature {
+      font-family: 'Great Vibes', cursive;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.12); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .call-pulse {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+
+    /* PRINT STYLES FOR A4 CERTIFICATE */
+    @media print {
+      @page {
+        size: landscape;
+        margin: 0;
+      }
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #section-certificate {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      #certificate-printable {
+        box-shadow: none !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        border-radius: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen pb-16">
+
+  <!-- TOP HEADER -->
+  <header class="no-print bg-gradient-to-r from-indigo-950 via-indigo-900 to-blue-900 text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-amber-400 text-indigo-950 font-black text-lg flex items-center justify-center shadow-md">
+          BCTC
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-lg sm:text-xl tracking-tight">BCTC ENGLISH</h1>
+            <span class="text-[10px] sm:text-[11px] bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full font-semibold">
+              BCTC South Kolkata
+            </span>
+          </div>
+          <p class="text-xs text-indigo-200">বাংলা মিডিয়াম ছাত্রছাত্রীদের জন্য Spoken English ও প্র্যাকটিস অ্যাপ</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="activateAudioEngine()" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 text-xs font-extrabold px-3 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1">
+          🔊 Activate Voice
+        </button>
+        <button id="bilingualBtn" onclick="toggleBilingual()" class="text-xs px-2.5 py-1.5 rounded-lg font-semibold border bg-white/15 border-white/30 text-white">
+          বাংলা: ON
+        </button>
+        <div class="flex items-center gap-1 bg-indigo-950/70 px-2.5 py-1.5 rounded-lg border border-indigo-700 text-xs font-bold">
+          <span>🔥</span> <span id="streakDisplay">5</span>
+        </div>
+        <div class="flex items-center gap-1 bg-indigo-950/70 px-2.5 py-1.5 rounded-lg border border-indigo-700 text-xs font-bold">
+          <span>🏆</span> <span id="xpDisplay">150 XP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <div class="max-w-5xl mx-auto px-4 flex overflow-x-auto no-scrollbar border-t border-indigo-800/80">
+      <button onclick="switchTab('live_call')" id="tab-live_call" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-bold border-b-2 border-amber-400 text-amber-300 bg-white/5 whitespace-nowrap">
+        📞 Live AI Call <span class="bg-rose-500 text-white text-[9px] px-1 py-0.5 rounded font-extrabold">LIVE</span>
+      </button>
+      <button onclick="switchTab('ai_chat')" id="tab-ai_chat" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        🤖 AI Tutor
+      </button>
+      <button onclick="switchTab('tracker')" id="tab-tracker" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        📅 ৩০ দিনের রুটিন
+      </button>
+      <button onclick="switchTab('certificate')" id="tab-certificate" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        🎓 Certificate <span id="certTabBadge" class="bg-amber-400 text-indigo-950 text-[9px] px-1 py-0.5 rounded font-extrabold">NEW</span>
+      </button>
+      <button onclick="switchTab('bridge')" id="tab-bridge" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        🧩 বাক্য গঠন
+      </button>
+      <button onclick="switchTab('pronunciation')" id="tab-pronunciation" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        🎙️ উচ্চারণ ল্যাব
+      </button>
+      <button onclick="switchTab('banglish')" id="tab-banglish" class="tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap">
+        ✨ ভুল সংশোধন
+      </button>
+    </div>
+  </header>
+
+  <!-- FLOATING AUDIO KARAOKE BAR -->
+  <div id="karaokeBar" class="no-print hidden fixed bottom-4 left-4 right-4 max-w-lg mx-auto bg-indigo-950/95 border border-amber-400 text-white px-4 py-2.5 rounded-2xl shadow-2xl z-50 flex items-center justify-between text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+      <span id="karaokeText" class="font-bold text-amber-300">Speaking...</span>
+    </div>
+    <button onclick="document.getElementById('karaokeBar').classList.add('hidden')" class="text-slate-400 hover:text-white text-base">✕</button>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-5xl mx-auto px-4 pt-6">
+
+    <!-- 1. LIVE AI CALL -->
+    <section id="section-live_call" class="tab-section no-print">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div>
+            <h2 class="font-extrabold text-slate-800 text-base">📞 Hands-Free AI Voice Call</h2>
+            <p class="text-xs text-slate-500 mt-1">ফোনে কথা বলার মতো প্র্যাকটিস করুন। পরিস্থিতি বেছে নিন:</p>
+          </div>
+          <div id="callScenarioList" class="space-y-2.5"></div>
+          <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 leading-relaxed bilingual-hint">
+            💡 <strong>টিপস:</strong> আটকে গেলে বাংলা বা বাংলিশেই বলুন। BCTC AI সঠিক ইংরেজি বলে দেবে!
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-800 flex flex-col justify-between min-h-[520px]">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+              <div>
+                <h3 id="callScenarioTitle" class="font-bold text-sm text-white">Daily Casual Talk</h3>
+                <p id="callTimerDisplay" class="text-xs text-slate-400">Live Voice Coaching • 00:00</p>
+              </div>
+            </div>
+            <button onclick="speakText(lastSpokenCallText)" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 px-3 py-1.5 rounded-xl border border-slate-700 font-semibold">
+              🔊 Repeat Audio
+            </button>
+          </div>
+
+          <div class="my-auto py-6 flex flex-col items-center text-center">
+            <div class="relative flex items-center justify-center mb-4">
+              <div class="w-28 h-28 rounded-full bg-indigo-500/20 absolute call-pulse"></div>
+              <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-indigo-600 to-amber-400 flex items-center justify-center text-3xl font-black text-slate-950 shadow-lg relative z-10">
+                BCTC
+              </div>
+            </div>
+
+            <p id="callAiEnglish" class="text-lg sm:text-xl font-bold text-white max-w-xl leading-snug px-2"></p>
+            <p id="callAiBangla" class="text-xs text-indigo-200 mt-2 max-w-lg bilingual-hint"></p>
+
+            <div id="callGrammarBox" class="hidden mt-4 max-w-lg w-full bg-slate-800/90 border border-amber-400/40 rounded-2xl p-3.5 text-left">
+              <div class="text-xs font-bold text-amber-300 mb-1">✨ BCTC Spoken Upgrade:</div>
+              <p id="callUserSaid" class="text-xs text-slate-300 mb-1"></p>
+              <p id="callBetterEnglish" class="text-sm font-bold text-emerald-300"></p>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <p class="text-[11px] text-slate-400 mb-2 text-center">নমুনা উত্তর (Tap to reply):</p>
+            <div id="callQuickPrompts" class="flex flex-wrap justify-center gap-2"></div>
+          </div>
+
+          <div class="flex items-center justify-center gap-3 pt-3 border-t border-slate-800">
+            <button onclick="startCallVoice()" id="callMicBtn" class="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-sm flex items-center gap-2 shadow-lg">
+              🎙️ Tap & Speak
+            </button>
+            <button onclick="resetCallSession()" class="px-4 py-3.5 rounded-2xl bg-rose-600/20 text-rose-300 border border-rose-500/30 font-bold text-xs">
+              🔄 Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. AI TUTOR CHAT -->
+    <section id="section-ai_chat" class="tab-section hidden no-print">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[540px] max-w-4xl mx-auto">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-2xl">
+          <div>
+            <h2 class="font-extrabold text-slate-800 text-sm">🤖 BCTC AI Tutor</h2>
+            <p class="text-xs text-slate-500">বাংলা, Banglish বা ইংরেজিতে লিখুন</p>
+          </div>
+          <button onclick="clearChat()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold text-slate-600">
+            🔄 নতুন চ্যাট
+          </button>
+        </div>
+
+        <div id="chatContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+
+        <div class="px-4 py-2 bg-slate-50 border-t border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <span class="text-[11px] font-bold text-slate-400 shrink-0">উদাহরণ:</span>
+          <button onclick="sendChatMessage('Myself Rahul from South Kolkata.')" class="text-xs bg-white text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full whitespace-nowrap">"Myself Rahul"</button>
+          <button onclick="sendChatMessage('Today I went to college and gave exam.')" class="text-xs bg-white text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full whitespace-nowrap">"gave exam"</button>
+        </div>
+
+        <div class="p-3.5 border-t border-slate-200 flex items-center gap-2">
+          <input id="chatInput" type="text" placeholder="বাংলা বা ইংরেজিতে লিখুন..." onkeydown="if(event.key==='Enter') sendChatMessage()" class="flex-1 bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <button onclick="sendChatMessage()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs">
+            পাঠান ➤
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 30-DAY TRACKER -->
+    <section id="section-tracker" class="tab-section hidden no-print">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-extrabold text-slate-800 text-base">📅 ৩০ দিনের স্পোকেন রুটিন</h2>
+            <span id="progressPercent" class="text-xs font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">10% শেষ</span>
+          </div>
+          <p class="text-xs text-slate-500 mb-4">৩০ দিন সম্পূর্ণ করলে অফিসিয়াল BCTC Certificate আনলক হবে:</p>
+          <div id="daysGrid" class="grid grid-cols-5 gap-2 mb-4"></div>
+
+          <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            <button onclick="switchTab('certificate')" class="w-full py-2.5 px-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-indigo-950 font-extrabold text-xs flex items-center justify-center gap-1.5">
+              🎓 View Certificate
+            </button>
+            <button onclick="unlockAllDaysDemo()" class="w-full py-2 px-3 rounded-xl bg-slate-100 text-indigo-700 font-bold text-[11px] border border-slate-200">
+              ⚡ ডেমো: Unlock All 30 Days
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span id="dayBadge" class="text-xs font-extrabold uppercase bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">Day 1</span>
+              <span id="dayDoneBadge" class="text-xs font-bold text-emerald-600"></span>
+            </div>
+            <h3 id="dayTitle" class="text-xl font-extrabold text-slate-800 mb-2"></h3>
+            <p id="dayRule" class="text-xs text-slate-600 bg-slate-50 p-3.5 rounded-xl border border-slate-200 mb-5 leading-relaxed"></p>
+
+            <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-100 mb-5">
+              <span class="text-[11px] font-bold uppercase text-indigo-600 block mb-1">Speak Aloud Target:</span>
+              <p id="dayBanglaPrompt" class="text-xs text-slate-600 mb-1"></p>
+              <p id="dayEnglishTarget" class="text-lg font-extrabold text-indigo-950"></p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+            <div class="flex gap-2">
+              <button onclick="speakText(DAYS_DATA[currentDay-1].en)" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">
+                🔊 উচ্চারণ শুনুন
+              </button>
+              <button onclick="practiceCurrentDayVoice()" class="px-4 py-2.5 rounded-xl bg-amber-400 text-indigo-950 text-xs font-bold">
+                🎙️ মাইke বলুন
+              </button>
+            </div>
+            <button onclick="toggleCompleteDay()" class="px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold">
+              ✓ ক্লাস শেষ করুন
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CERTIFICATE GENERATOR -->
+    <section id="section-certificate" class="tab-section hidden">
+      <div class="no-print bg-white rounded-2xl p-5 shadow-sm border border-slate-200 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-100">
+          <div>
+            <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+              🎓 BCTC ENGLISH — Certificate Generator
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">ছাত্রের নাম লিখলেই নিচে অফিশিয়াল সার্টিফিকেট তৈরি হয়ে যাবে।</p>
+          </div>
+          <div id="certLockBanner" class="flex items-center gap-3 bg-amber-50 border border-amber-200 px-4 py-2.5 rounded-xl">
+            <span id="certStatusText" class="text-xs font-bold text-amber-900">প্রগ্রেস: 3/30 দিন</span>
+            <button onclick="unlockAllDaysDemo()" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg">⚡ Unlock</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ছাত্র/ছাত্রীর নাম:</label>
+            <input id="certStudentNameInput" type="text" value="Sourav Chatterjee" oninput="updateCertificatePreview()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm font-semibold" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ব্যাচ / রোল নম্বর:</label>
+            <input id="certBatchInput" type="text" value="BCTC-2026-ENG-01" oninput="updateCertificatePreview()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm font-semibold" />
+          </div>
+          <div>
+            <button onclick="window.print()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-md">
+              🖨️ Print / Save PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRINTABLE CERTIFICATE CANVAS -->
+      <div id="certificate-printable" class="bg-[#fffdf9] text-slate-900 rounded-2xl shadow-2xl border-[12px] border-indigo-950 p-4 sm:p-6 max-w-4xl mx-auto relative overflow-hidden">
+        <div class="border-4 border-amber-500/80 rounded-xl p-6 sm:p-10 relative bg-[radial-gradient(#f59e0b15_1px,transparent_1px)] [background-size:20px_20px]">
+          <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center gap-2 mb-2">
+              <div class="w-10 h-10 rounded-lg bg-indigo-950 text-amber-400 font-black text-base flex items-center justify-center border-2 border-amber-400">
+                BCTC
+              </div>
+              <div class="text-left">
+                <h4 class="font-extrabold text-sm sm:text-base tracking-wider text-indigo-950 uppercase">
+                  Brajodham Computer Tutorial Center
+                </h4>
+                <p class="text-[11px] font-semibold text-slate-500">BCTC ENGLISH • South Kolkata</p>
+              </div>
+            </div>
+            <h1 class="font-serif-cert text-2xl sm:text-4xl font-extrabold text-indigo-950 tracking-widest uppercase mt-2">
+              Certificate of Completion
+            </h1>
+            <p class="text-xs font-bold uppercase tracking-widest text-amber-700 mt-1">
+              ৩০ দিনের স্পোকেন ইংলিশ ও ফ্লুয়েন্সি কোর্স
+            </p>
+          </div>
+
+          <div class="text-center my-6 space-y-3">
+            <p class="text-xs sm:text-sm italic text-slate-600">This is proudly presented to</p>
+            <div>
+              <h2 id="certDisplayStudentName" class="font-serif-cert text-2xl sm:text-4xl font-extrabold text-indigo-900 border-b-2 border-amber-500/60 inline-block px-8 pb-1">
+                Sourav Chatterjee
+              </h2>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-700 max-w-2xl mx-auto leading-relaxed pt-1">
+              for successfully completing the <strong>30-Day BCTC ENGLISH Curriculum</strong>, mastering Sentence Structure (SOV to SVO), Pronunciation, and Conversational Fluency.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 max-w-xl mx-auto my-6 bg-indigo-950/5 border border-indigo-950/15 rounded-xl p-3 text-center">
+            <div>
+              <span class="text-[10px] font-bold uppercase text-slate-500 block">Batch ID</span>
+              <span id="certDisplayBatch" class="text-xs sm:text-sm font-extrabold text-indigo-950">BCTC-2026-ENG-01</span>
+            </div>
+            <div class="border-x border-indigo-950/15">
+              <span class="text-[10px] font-bold uppercase text-slate-500 block">Grade</span>
+              <span class="text-xs sm:text-sm font-extrabold text-emerald-700">A+ (Distinction)</span>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold uppercase text-slate-500 block">XP & Days</span>
+              <span id="certDisplayXp" class="text-xs sm:text-sm font-extrabold text-amber-700">900 XP • 30/30</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 items-end pt-6 mt-4">
+            <div class="text-center">
+              <p id="certDisplayDate" class="text-xs font-bold text-slate-800 pb-1 border-b border-slate-400 max-w-[150px] mx-auto">14 October 2026</p>
+              <span class="text-[10px] font-bold text-slate-500 uppercase block mt-1">Date of Issue</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-amber-300 to-amber-600 p-1 flex items-center justify-center border-2 border-amber-200 shadow">
+                <span class="text-[9px] font-black uppercase text-indigo-950 text-center">BCTC<br>VERIFIED</span>
+              </div>
+            </div>
+            <div class="text-center">
+              <p class="font-signature text-2xl sm:text-3xl text-indigo-900 pb-0 border-b border-slate-400 max-w-[180px] mx-auto leading-none">Abhijit Chakraborty</p>
+              <span class="text-[10px] font-extrabold text-indigo-950 uppercase block mt-1">Abhijit Chakraborty</span>
+              <span class="text-[9px] text-slate-500 block">Spoken English Trainer, BCTC</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SENTENCE BRIDGE -->
+    <section id="section-bridge" class="tab-section hidden no-print">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-3xl mx-auto">
+        <div class="flex items-center justify-between mb-3">
+          <span id="bridgeCounter" class="text-xs font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">লেসন 1</span>
+          <span class="text-xs text-slate-500">SOV → SVO</span>
+        </div>
+        <h2 id="bridgeBangla" class="text-2xl font-extrabold text-slate-800 mb-3"></h2>
+        <div id="bridgeBreakdown" class="flex flex-wrap gap-2 mb-4"></div>
+        <div id="bridgeSelectedBox" class="min-h-[50px] p-3 rounded-xl bg-slate-100 border-2 border-dashed border-slate-300 mb-4 flex flex-wrap gap-2"></div>
+        <div id="bridgeWordBank" class="flex flex-wrap gap-2 mb-5"></div>
+        <div id="bridgeFeedback" class="hidden mb-4 p-3.5 rounded-xl text-xs font-bold"></div>
+        <div class="flex justify-between">
+          <button onclick="resetBridge()" class="px-4 py-2 text-xs font-bold border rounded-xl">রিসেট</button>
+          <div class="flex gap-2">
+            <button onclick="checkBridge()" class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">যাচাই করুন</button>
+            <button onclick="nextBridge()" class="px-4 py-2 bg-amber-400 text-indigo-950 rounded-xl text-xs font-bold">পরের বাক্য ➔</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. PRONUNCIATION LAB -->
+    <section id="section-pronunciation" class="tab-section hidden no-print">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-3xl mx-auto">
+        <span id="pronCategory" class="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1 rounded-full"></span>
+        <h2 id="pronSentence" class="text-2xl font-extrabold text-slate-800 mt-4 mb-2"></h2>
+        <p id="pronPhonetic" class="text-sm font-semibold text-indigo-700 mb-4"></p>
+        <div id="pronTip" class="p-4 rounded-xl bg-slate-50 border text-xs text-slate-700 mb-5"></div>
+        <div class="flex flex-wrap gap-3 mb-5">
+          <button onclick="speakText(PRON_DATA[pronIdx].sent, 0.9)" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">🔊 শুনুন</button>
+          <button onclick="recordPron()" class="px-5 py-2 bg-amber-400 text-indigo-950 rounded-xl text-xs font-bold">🎙️ মাইকে বলুন</button>
+        </div>
+        <div id="pronResult" class="hidden p-4 rounded-xl bg-emerald-50 border text-xs text-emerald-800 font-bold mb-4"></div>
+        <div class="flex justify-end"><button onclick="nextPron()" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold">পরবর্তী ➔</button></div>
+      </div>
+    </section>
+
+    <!-- 7. BANGLISH FIXER -->
+    <section id="section-banglish" class="tab-section hidden no-print">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-3xl mx-auto">
+        <h2 class="text-lg font-extrabold text-slate-800 mb-1">✨ Banglish Fixer</h2>
+        <p class="text-xs text-slate-500 mb-4">সাধারণ অনুবাদ ভুল:</p>
+        <div class="p-4 rounded-xl bg-slate-100 mb-4">
+          <span class="text-[11px] font-bold text-slate-500">বাংলা:</span>
+          <p id="fixBangla" class="text-base font-bold text-slate-800 mt-0.5"></p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="p-4 rounded-xl bg-rose-50 border border-rose-200">
+            <span class="text-xs font-bold text-rose-700 block mb-1">❌ ভুল:</span>
+            <p id="fixWrong" class="text-sm font-semibold text-rose-900"></p>
+          </div>
+          <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-emerald-700 block mb-1">✅ সঠিক:</span>
+              <p id="fixRight" class="text-sm font-bold text-emerald-950"></p>
+            </div>
+            <button onclick="speakText(FIX_DATA[fixIdx].right)" class="p-2 bg-emerald-600 text-white rounded-xl text-xs font-bold">🔊</button>
+          </div>
+        </div>
+        <div id="fixRule" class="p-3.5 rounded-xl bg-indigo-50 border text-xs text-indigo-950 mb-5"></div>
+        <button onclick="nextFix()" class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">পরের নিয়ম ➔</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let xp = parseInt(localStorage.getItem('bctc_xp')) || 150;
+    let completedDays = JSON.parse(localStorage.getItem('bctc_days')) || [1, 2, 3];
+    let bilingualHelp = true;
+    let callSeconds = 0;
+
+    function saveState() {
+      localStorage.setItem('bctc_xp', xp);
+      localStorage.setItem('bctc_days', JSON.stringify(completedDays));
+    }
+
+    function activateAudioEngine() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance("BCTC English activated. Welcome!");
+        u.lang = 'en-IN';
+        window.speechSynthesis.speak(u);
+      }
+      showKaraoke("BCTC Audio Engine Active!");
+    }
+
+    function showKaraoke(txt) {
+      const bar = document.getElementById('karaokeBar');
+      const text = document.getElementById('karaokeText');
+      text.innerText = txt;
+      bar.classList.remove('hidden');
+      setTimeout(() => bar.classList.add('hidden'), 3500);
+    }
+
+    function speakText(text, rate = 0.9) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-IN';
+        u.rate = rate;
+        window.speechSynthesis.speak(u);
+      }
+      showKaraoke(text);
+    }
+
+    function addXp(amount) {
+      xp += amount;
+      document.getElementById('xpDisplay').innerText = xp + ' XP';
+      saveState();
+      updateCertificatePreview();
+    }
+
+    function toggleBilingual() {
+      bilingualHelp = !bilingualHelp;
+      document.getElementById('bilingualBtn').innerText = bilingualHelp ? 'বাংলা: ON' : 'বাংলা: OFF';
+      document.querySelectorAll('.bilingual-hint').forEach(el => el.style.display = bilingualHelp ? 'block' : 'none');
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById('section-' + tabId).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = "tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-indigo-200 hover:text-white whitespace-nowrap";
+      });
+      document.getElementById('tab-' + tabId).className = "tab-btn flex items-center gap-1.5 px-3.5 py-3 text-xs sm:text-sm font-bold border-b-2 border-amber-400 text-amber-300 bg-white/5 whitespace-nowrap";
+      if (tabId === 'certificate') updateCertificatePreview();
+    }
+
+    // --- CALL SCENARIOS ---
+    const CALL_SCENARIOS = [
+      { id: 'casual', title: 'Daily Casual Talk', sub: 'সকালের রুটিন', en: "Hello! Welcome to BCTC Live Voice Practice. How did you spend your morning today?", bn: "(আজ আপনার সকালটা কীভাবে কাটল?)", prompts: ["Today I woke up at 7 AM.", "আমি আজ সকালে চা খেয়েছি।"] },
+      { id: 'interview', title: 'Sector V Job Interview', sub: 'কর্পোরেট ইন্টারভিউ', en: "Good morning! Please introduce yourself briefly.", bn: "(সংক্ষেপে নিজের পরিচয় দিন)", prompts: ["I am Rahul from Kolkata.", "I completed graduation."] }
+    ];
+    let activeCall = CALL_SCENARIOS[0];
+    let lastSpokenCallText = activeCall.en;
+
+    function renderCall() {
+      document.getElementById('callScenarioTitle').innerText = activeCall.title;
+      document.getElementById('callAiEnglish').innerText = `"${activeCall.en}"`;
+      document.getElementById('callAiBangla').innerText = activeCall.bn;
+      document.getElementById('callGrammarBox').classList.add('hidden');
+      lastSpokenCallText = activeCall.en;
+
+      document.getElementById('callQuickPrompts').innerHTML = activeCall.prompts.map(p => `
+        <button onclick="handleCallReply('${p.replace(/'/g, "\\'")}')" class="text-xs bg-slate-800 text-amber-300 border border-slate-700 px-3 py-1.5 rounded-full">"${p}"</button>
+      `).join('');
+    }
+
+    function selectCallScenario(id) {
+      activeCall = CALL_SCENARIOS.find(s => s.id === id);
+      renderCall();
+      speakText(activeCall.en);
+    }
+
+    function handleCallReply(speech) {
+      document.getElementById('callGrammarBox').classList.remove('hidden');
+      document.getElementById('callUserSaid').innerText = `আপনি বলেছেন: "${speech}"`;
+      document.getElementById('callBetterEnglish').innerText = `✅ Better Spoken English: "${speech}"`;
+      document.getElementById('callAiEnglish').innerText = `"Wonderful! Tell me more about your goals."`;
+      document.getElementById('callAiBangla').innerText = "(আপনার লক্ষ্য সম্পর্কে আরও বলুন)";
+      lastSpokenCallText = "Wonderful! Tell me more about your goals.";
+      addXp(20);
+      speakText(lastSpokenCallText);
+    }
+
+    function resetCallSession() { renderCall(); speakText(activeCall.en); }
+
+    function startCallVoice() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        const rec = new SR();
+        rec.lang = 'en-IN';
+        rec.onresult = (e) => handleCallReply(e.results[0][0].transcript);
+        rec.start();
+      } else {
+        handleCallReply(activeCall.prompts[0]);
+      }
+    }
+
+    setInterval(() => {
+      callSeconds++;
+      const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+      const s = String(callSeconds % 60).padStart(2, '0');
+      document.getElementById('callTimerDisplay').innerText = `Live Voice • ${m}:${s}`;
+    }, 1000);
+
+    // --- CHAT TUTOR ---
+    let chatHistory = [{ sender: 'ai', text: "হ্যালো! আমি BCTC AI Tutor। ইংরেজিতে কথা বলতে প্র্যাকটিস করুন।", speak: "Hello! Welcome to BCTC AI Tutor." }];
+
+    function renderChat() {
+      document.getElementById('chatContainer').innerHTML = chatHistory.map(m => `
+        <div class="flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}">
+          <div class="max-w-[85%] rounded-2xl p-3.5 ${m.sender === 'user' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-800 border'}">
+            <p class="text-sm">${m.text}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function sendChatMessage(txt) {
+      const input = document.getElementById('chatInput');
+      const msg = txt || input.value;
+      if (!msg.trim()) return;
+      chatHistory.push({ sender: 'user', text: msg });
+      chatHistory.push({ sender: 'ai', text: `Great sentence! Say: "${msg}" with confidence.`, speak: msg });
+      input.value = '';
+      addXp(15);
+      renderChat();
+      speakText(msg);
+    }
+
+    function clearChat() { chatHistory = [chatHistory[0]]; renderChat(); }
+
+    // --- TRACKER & CERTIFICATE ---
+    const DAYS_DATA = Array.from({ length: 30 }, (_, i) => ({
+      title: `Day ${i+1}: Spoken Fluency Mission`,
+      rule: "নিয়মিত জোরে উচ্চারণ করে প্র্যাকটিস করুন।",
+      bn: `আজ আমার ${i+1} তম দিনের প্র্যাকটিস।`,
+      en: `Today is day ${i+1} of my spoken English practice.`
+    }));
+    let currentDay = 1;
+
+    function renderTracker() {
+      document.getElementById('daysGrid').innerHTML = DAYS_DATA.map((_, i) => `
+        <button onclick="selectDay(${i+1})" class="h-10 rounded-xl font-bold text-xs border ${currentDay === i+1 ? 'bg-indigo-600 text-white' : completedDays.includes(i+1) ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-50 text-slate-700'}">
+          ${i+1} ${completedDays.includes(i+1)?'✓':''}
+        </button>
+      `).join('');
+
+      const pct = Math.round((completedDays.length / 30) * 100);
+      document.getElementById('progressPercent').innerText = `${pct}% শেষ`;
+      const item = DAYS_DATA[currentDay - 1];
+      document.getElementById('dayBadge').innerText = `Day ${currentDay}`;
+      document.getElementById('dayDoneBadge').innerText = completedDays.includes(currentDay) ? '✅ সম্পন্ন' : '⏳ বাকি';
+      document.getElementById('dayTitle').innerText = item.title;
+      document.getElementById('dayRule').innerText = item.rule;
+      document.getElementById('dayBanglaPrompt').innerText = `বাংলা: "${item.bn}"`;
+      document.getElementById('dayEnglishTarget').innerText = `"${item.en}"`;
+    }
+
+    function selectDay(d) { currentDay = d; renderTracker(); }
+    function toggleCompleteDay() {
+      if (!completedDays.includes(currentDay)) { completedDays.push(currentDay); addXp(25); }
+      saveState(); renderTracker();
+    }
+    function unlockAllDaysDemo() {
+      completedDays = Array.from({ length: 30 }, (_, i) => i + 1);
+      if (xp < 900) xp = 900;
+      saveState(); renderTracker(); switchTab('certificate');
+    }
+
+    function updateCertificatePreview() {
+      const name = document.getElementById('certStudentNameInput').value.trim() || 'Student Name';
+      const batch = document.getElementById('certBatchInput').value.trim() || 'BCTC-2026';
+      document.getElementById('certDisplayStudentName').innerText = name;
+      document.getElementById('certDisplayBatch').innerText = batch;
+      document.getElementById('certDisplayXp').innerText = `${xp} XP • ${completedDays.length}/30`;
+    }
+
+    // --- BRIDGE, PRON, BANGLISH ---
+    const BRIDGE_DATA = [{ bangla: "আমি ভাত খাই।", target: ["I", "eat", "rice"], bank: ["rice", "I", "eat"] }];
+    let bridgeIdx = 0, selBridge = [];
+    function renderBridge() {
+      const b = BRIDGE_DATA[bridgeIdx];
+      document.getElementById('bridgeBangla').innerText = b.bangla;
+      document.getElementById('bridgeSelectedBox').innerHTML = selBridge.map(w => `<span class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm font-bold">${w}</span>`).join('');
+      document.getElementById('bridgeWordBank').innerHTML = b.bank.map(w => `<button onclick="selBridge.push('${w}');renderBridge()" class="px-3 py-1.5 border bg-white text-xs font-bold rounded-xl">${w}</button>`).join('');
+    }
+    function resetBridge() { selBridge = []; renderBridge(); }
+    function checkBridge() {
+      const fb = document.getElementById('bridgeFeedback');
+      fb.classList.remove('hidden');
+      fb.innerText = selBridge.join(' ') === BRIDGE_DATA[bridgeIdx].target.join(' ') ? "✅ সঠিক!" : "❌ ভুল! Subject + Verb সাজান।";
+    }
+    function nextBridge() { resetBridge(); }
+
+    const PRON_DATA = [{ cat: "S vs SH", sent: "She sells sea shells.", phon: "শী সেলস্ সী শেলস্" }];
+    let pronIdx = 0;
+    function renderPron() {
+      document.getElementById('pronCategory').innerText = PRON_DATA[pronIdx].cat;
+      document.getElementById('pronSentence').innerText = PRON_DATA[pronIdx].sent;
+      document.getElementById('pronPhonetic').innerText = PRON_DATA[pronIdx].phon;
+    }
+    function recordPron() {
+      const res = document.getElementById('pronResult');
+      res.classList.remove('hidden');
+      res.innerText = "🎉 Score: 95% — দারুণ উচ্চারণ!";
+      addXp(20);
+    }
+    function nextPron() { pronIdx = (pronIdx + 1) % PRON_DATA.length; renderPron(); }
+
+    const FIX_DATA = [{ bn: "পরীক্ষা দেবো।", wrong: "give exam", right: "take exam", rule: "ছাত্ররা পরীক্ষা নেয় না, দেয় (Take an exam)." }];
+    let fixIdx = 0;
+    function renderFix() {
+      document.getElementById('fixBangla').innerText = FIX_DATA[fixIdx].bn;
+      document.getElementById('fixWrong').innerText = FIX_DATA[fixIdx].wrong;
+      document.getElementById('fixRight').innerText = FIX_DATA[fixIdx].right;
+      document.getElementById('fixRule').innerText = FIX_DATA[fixIdx].rule;
+    }
+    function nextFix() { fixIdx = (fixIdx + 1) % FIX_DATA.length; renderFix(); }
+
+    window.onload = () => {
+      document.getElementById('xpDisplay').innerText = xp + ' XP';
+      document.getElementById('streakDisplay').innerText = "5";
+      renderCall();
+      renderChat();
+      renderTracker();
+      updateCertificatePreview();
+      renderBridge();
+      renderPron();
+      renderFix();
+    };
+  </script>
+</body>
+</html>
+
